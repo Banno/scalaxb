@@ -25,7 +25,7 @@ package scalaxb.compiler.wsdl11
 trait GenSource {
   import scalashim._
   import wsdl11._
-  import scalaxb.{DataRecord}
+  import masked.scalaxb.{DataRecord}
   import scalaxb.compiler.{Config, Snippet, ReferenceNotFound, Module, Log, ScalaNames}
   import Module.{NL, indent, camelCase}
   import scala.xml.Node
@@ -310,7 +310,7 @@ trait {interfaceTypeName} {{
       sys.error("operation %s was not found in %s".format(binding.name, intf.name))
     }
 
-  def parseSoapBindingStyle(anyHeadOption: Option[scalaxb.DataRecord[Any]], defaultSoapBindingStyle: SoapBindingStyle): SoapBindingStyle =
+  def parseSoapBindingStyle(anyHeadOption: Option[DataRecord[Any]], defaultSoapBindingStyle: SoapBindingStyle): SoapBindingStyle =
     anyHeadOption match {
       case Some(DataRecord(_, _, node: Node)) =>
         (node \ "@style").headOption match {
@@ -461,7 +461,7 @@ trait {interfaceTypeName} {{
     }
     b map { node =>
       HeaderBinding((node \ "@use").headOption map {_.text == "literal"} getOrElse {true},
-        scalaxb.fromXML[javax.xml.namespace.QName](node \ "@message")(scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)),
+        masked.scalaxb.fromXML[javax.xml.namespace.QName](node \ "@message")(masked.scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)),
         (node \ "@part").text,
         (node \ "@encodingStyle").headOption map {_.text},
         (node \ "@namespace").headOption map {_.text}
@@ -517,7 +517,7 @@ trait {interfaceTypeName} {{
 
     lazy val args = parts map { p =>
       val v = escapeKeyWord(soapBindingStyle match {
-        case DocumentStyle => if (isMultiPart(input, binding.input)) "value"
+        case DocumentStyle => if (isMultiPart(input, binding.input)) toParamCache(p).toParamName
                               else entity(p)
         case RpcStyle      => p.name.getOrElse {"in"}
       })
