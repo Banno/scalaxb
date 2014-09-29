@@ -1,6 +1,13 @@
 import Dependencies._
 import Common._
 
+val bannoCustom = Seq(
+  version := "1.2.1-banno-fix-2",
+  scalaVersion := "2.10.4",
+  publishTo := Some("Banno Third Party Repo" at "http://nexus.banno.com/nexus/content/repositories/thirdparty"),
+  credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
+)
+
 val commonSettings = Seq(
     version := "1.2.1",
     organization := "org.scalaxb",
@@ -12,7 +19,7 @@ val commonSettings = Seq(
     scalacOptions := Seq("-deprecation", "-unchecked"),
     parallelExecution in Test := false,
     resolvers += Resolver.typesafeIvyRepo("releases")
-  ) ++ sonatypeSettings ++ lsSettings
+  ) ++ sonatypeSettings ++ lsSettings ++ bannoCustom
 
 val app = (project in file("cli")).
   settings(commonSettings: _*).
