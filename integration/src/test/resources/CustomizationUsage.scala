@@ -7,16 +7,16 @@ import general._
 
 object CustomizationUsage {
   val NS = Some("http://www.example.com/general")
-  
+
   def main(args: Array[String]): Unit = {
     allTests
   }
-  
+
   def allTests = {
     testSingularSimpleType
     true
   }
-  
+
   trait CustomXMLStandardTypes extends scalaxb.XMLStandardTypes {
     override implicit lazy val __IntXMLFormat: XMLFormat[Int] = new XMLFormat[Int] {
       def reads(seq: scala.xml.NodeSeq, stack: List[scalaxb.ElemName]): Either[String, Int] = try { Right(seq.text.toInt + 1) }
@@ -36,11 +36,12 @@ object CustomizationUsage {
         Helper.stringToXML((obj - 1).toString, namespace, elementLabel, scope)
     }
   }
-  
+
   trait CustomXMLProtocol extends XMLProtocol {
-    trait CustomGeneralSingularSimpleTypeTestFormat extends DefaultGeneralSingularSimpleTypeTestFormat {
+    trait CustomGeneralSingularSimpleTypeTestFormat extends scalaxb.ElemNameParser[general.SingularSimpleTypeTest] {
+      val targetNamespace: Option[String] = Some("http://www.example.com/general")
       override def typeName: Option[String] = Some("SingularSimpleTypeTest")
-      
+
       // hardcode to SKIM.
       override def parser(node: scala.xml.Node, stack: List[scalaxb.ElemName]): Parser[general.SingularSimpleTypeTest] =
         (scalaxb.ElemName(targetNamespace, "number1")) ~
@@ -73,7 +74,13 @@ object CustomizationUsage {
           scala.collection.immutable.ListMap(List(
             (node \ "@attr1").headOption map { x => scalaxb.DataRecord(x, node, scalaxb.fromXML[Long](x, scalaxb.ElemName(node) :: stack)) } map { "@attr1" -> _ },
             (node \ "@attr2").headOption map { x => scalaxb.DataRecord(x, node, scalaxb.fromXML[general.MilkType](x, scalaxb.ElemName(node) :: stack)) } map { "@attr2" -> _ }
-          ).flatten[(String, scalaxb.DataRecord[Any])]: _*)) }
+                                             ).flatten[(String, scalaxb.DataRecord[Any])]: _*)) }
+
+      override def writesAttribute(__obj: general.SingularSimpleTypeTest, __scope: scala.xml.NamespaceBinding): scala.xml.MetaData =
+        DefaultGeneralSingularSimpleTypeTestFormat.writesAttribute(__obj, __scope)
+
+      override def writesChildNodes(__obj: general.SingularSimpleTypeTest, __scope: scala.xml.NamespaceBinding): Seq[scala.xml.Node] =
+        DefaultGeneralSingularSimpleTypeTestFormat.writesChildNodes(__obj, __scope)
     }
   }
 
@@ -90,7 +97,7 @@ object CustomizationUsage {
     val obj0 = fromXML[Int](subject0)
     println(obj0)
     println(toXML[Int](obj0, "foo", defaultScope))
-    
+
     val subject = <foo xmlns="http://www.example.com/general"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <number1>1</number1>
@@ -98,13 +105,13 @@ object CustomizationUsage {
       <number4>1</number4>
       <number5>2</number5><number5>1</number5>
       <number7 xsi:nil="true"/>
-      
+
       <milk1>WHOLE</milk1>
       <milk2 xsi:nil="true"/>
       <milk5>WHOLE</milk5><milk5>SKIM</milk5>
     </foo>
     val obj = fromXML[SingularSimpleTypeTest](subject)
-    
+
     def check(obj: Any) = obj match {
         // custom parser adds 1.
         case SingularSimpleTypeTest(2, None, None, Some(Some(2)), Seq(3, 2), Seq(), None,
