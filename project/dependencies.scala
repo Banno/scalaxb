@@ -16,11 +16,11 @@ object Dependencies {
   val cxfFrontendJaxws = "org.apache.cxf" % "cxf-rt-frontend-jaxws" % cxfVersion
   val cxfTransportsHttp = "org.apache.cxf" % "cxf-rt-transports-http" % cxfVersion
   val cxfTrapsportsHttpJetty = "org.apache.cxf" % "cxf-rt-transports-http-jetty" % cxfVersion
-  val scalaz = "org.scalaz" % "scalaz-core_2.11" % "7.0.6"
+  val scalaz = "org.scalaz" % "scalaz-core_2.10" % "7.0.6"
 
   def scalaCompiler(sv: String) = "org.scala-lang" % "scala-compiler" % sv
 
-  val specs2Version = "2.4.11"
+  val specs2Version = "2.10.1"
   def specs2(sv: String) = sv match {
     case x if x startsWith "2.9."  => "org.specs2" %% "specs2" % "1.12.3"
     case x if x startsWith "2.10." => "org.specs2" %% "specs2" % "2.1.1"

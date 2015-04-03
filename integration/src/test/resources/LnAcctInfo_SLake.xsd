@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://jackhenry.com/jxchange/TPG/2008" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://jackhenry.com/jxchange/TPG/2008" version="R2014.0.05" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="Main">
+    <xsd:sequence>
+      <xsd:element name="LnAcctInfo" type="LnAcctInfo_CType" />
+      <xsd:element name="LnAcctInfo_SLake" type="LnAcctInfo_SLake_CType"/>
+    </xsd:sequence>
+  </xsd:element>
+
+  <xsd:complexType name="LnAcctInfo_CType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="WatchListCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="VehicleId" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserDefInfoArray" type="xs:string" />
+      <xsd:element minOccurs="0" name="TitleNeeded" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="SubPrimeLnCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="StudentLnCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="State" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RstrAdvaOvrLmt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RstrAdva" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RewriteToLnAcctId" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RestructuredDr" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RelAcctType" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RelAcctId" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PurpCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PtPaid" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PrtRcpt" nillable="true" type="xs:string">
+        <xsd:annotation>
+          <xsd:documentation>The true and false canonical values are only
+                        supported</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="PrtPastDueNotCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PrtCouponBook" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PrtBilNotCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PrevStat" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PrePmtPenCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PayoffPend" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PartIdNum" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigPartPct" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigLnToValRatio" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="LateChgCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="IncCombStmt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="HldMailCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="HighRiskCust" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ForcedPlaceInsur" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ExmnrClsfCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ExclAutoNonAccr" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="DeptCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CurLnToValRatio" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CrRatingCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CouponBookTerm" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CollatCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ClsOnZeroBal" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CalcPartPct" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BadChkRecv" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AnnIncmAmt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AcctClsfCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="HldAcctType" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="HldAcctId" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="SvcPrvdInfo" nillable="true" type="xs:string" />
+      <xsd:sequence minOccurs="0">
+        <xsd:element name="Ver_1" type="xs:string" />
+        <xsd:element minOccurs="0" name="BorwInfoArray" type="xs:string" />
+        <xsd:element minOccurs="0" name="LnClsInfoArray" type="xs:string" />
+        <xsd:element minOccurs="0" name="LOCAcctId" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="LOCCustId" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="CombLTV" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="CurrencyCode" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="CrScoreId" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="CrScoreCode" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="TotDownPmtAmt" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="ExcLndPlcyCode" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="LnPmtToIncmPct" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="InvrInsurCode" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="InvrPurpCode" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="ATMCard" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="MoDebtAmt" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="MinBilAmt" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="MoIncmAmt" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="NumBorw" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="PrtcpCode" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="PrtcpAcctId" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="PrtcpAcctType" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="TotDebtPct" nillable="true" type="xs:string" />
+        <xsd:element minOccurs="0" name="TotOtherDebtAmt" nillable="true" type="xs:string" />
+        <xsd:sequence minOccurs="0">
+          <xsd:element name="Ver_2" type="xs:string" />
+          <xsd:element minOccurs="0" name="EndorNum" nillable="true" type="xs:string" />
+          <xsd:element minOccurs="0" name="CrBureauRptCode" nillable="true" type="xs:string" />
+          <xsd:element minOccurs="0" name="FirstStmtFeeCode" nillable="true" type="xs:string" />
+          <xsd:element minOccurs="0" name="FirstStmtDt" nillable="true" type="xs:string" />
+          <xsd:element minOccurs="0" name="PrePmtPenInfoRec" type="xs:string" />
+          <xsd:element minOccurs="0" name="LnGuarArray" type="xs:string" />
+          <xsd:sequence minOccurs="0">
+            <xsd:element name="Ver_3" type="xs:string" />
+            <xsd:element minOccurs="0" name="AllowTrnActArray" type="xs:string" />
+            <xsd:element minOccurs="0" name="LangType" nillable="true" type="xs:string" />
+            <xsd:sequence minOccurs="0">
+              <xsd:element name="Ver_4" type="xs:string" />
+              <xsd:element minOccurs="0" name="BorwDebtIncmPct" type="xs:string" />
+              <xsd:element minOccurs="0" name="CoBorwDebtIncmPct" type="xs:string" />
+              <xsd:element minOccurs="0" name="BorwLiqAssetAmt" type="xs:string" />
+              <xsd:element minOccurs="0" name="NetWorth" type="xs:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <Deprecate>
+                      <Dt>2018-01-01</Dt>
+                      <Cmnt>The element NetWorthAmt should be used due to size limitations of the NetWorth element</Cmnt>
+                    </Deprecate>
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" name="StressRateCode" type="xs:string" />
+              <xsd:element minOccurs="0" name="StressRateDt" type="xs:string" />
+              <xsd:sequence minOccurs="0">
+                <xsd:element name="Ver_5" type="xs:string" />
+                <xsd:element minOccurs="0" name="SecdCrScoreId" type="xs:string" />
+                <xsd:sequence minOccurs="0">
+                  <xsd:element name="Ver_6" type="xs:string" />
+                  <xsd:element minOccurs="0" name="CurApprLTVRatio" type="xs:string" />
+                  <xsd:sequence minOccurs="0">
+                    <xsd:element name="Ver_7" type="xs:string" />
+                    <xsd:element minOccurs="0" name="PrePmtPenBillDt" type="xs:string" />
+                    <xsd:element minOccurs="0" name="PrePmtPenDueDt" type="xs:string" />
+                    <xsd:element minOccurs="0" name="InvrPropType" type="xs:string" />
+                    <xsd:sequence minOccurs="0">
+                      <xsd:element name="Ver_8" type="xs:string" />
+                      <xsd:element minOccurs="0" name="NetWorthAmt" type="xs:string" />
+                      <xsd:sequence minOccurs="0">
+                        <xsd:element name="Ver_9" type="xs:string" />
+                        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" processContents="lax" />
+                      </xsd:sequence>
+                    </xsd:sequence>
+                  </xsd:sequence>
+                </xsd:sequence>
+              </xsd:sequence>
+            </xsd:sequence>
+          </xsd:sequence>
+        </xsd:sequence>
+      </xsd:sequence>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="LnAcctInfo_SLake_CType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="OffCode1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCode2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCode3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCode4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCode5" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCodeDesc1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCodeDesc2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCodeDesc3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCodeDesc4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCodeDesc5" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="EscrwMortInfoFlg" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ActnTakenTypeDesc" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PartDesc" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="NotCurDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CurtNotExpDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CurtAllowableDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CurtYTD" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CurtPrevYTD" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="InvAllowDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RecoupCurtToDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RecoupPrevYTD" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RecoupYTD" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PenBalCurt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PenBalRecoup" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PrtBilNotCodeDesc" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OtherCharges" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="LastAccrBal" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AvlCr" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigLnDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RightToCureCnt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RecourseInt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UnitPricedRptMthd" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="MinUnitAdvance" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CalcSupervisoryLTVRate" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="LienPosition" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PledgeFlg" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="LateChargeDue" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorrowRace2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorrowRace3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorrowRace4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorrowRace5" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="TieredRateType" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CalcSplitRateAccr" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AccrIntRounded" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UnusedCrAccrRounded" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrUse1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrUse2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrUse3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrUse4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrUse5" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrUse6" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrUse7" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrDt1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrDt61" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrDt2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrDt62" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrAmt1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrAmt2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrAmt3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrAmt4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrAmt5" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrAmt6" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PgmrAmt7" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="HldMailCodeOverlay" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="LangCodeDesc" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ActnTakenType" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwAge" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwBirthDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwEthnicity" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwEthnicityDesc" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwFICO" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwGender" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwIncome" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwInfoTxt1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwInfoTxt2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwRace" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwRaceDesc" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="BorwSelfEmployed" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwAge" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwBirthDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwEthnicity" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwEthnicityDesc" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwFICO" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwGender" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwIncome" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwRace" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwRaceDesc" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIBorwEducADM1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIBorwEducADM2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIBorwEducFMT1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIBorwEducFMT2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIClosingCstAmt1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIClosingCstAmt2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIClosingCstAmt3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIClosingCstAmt4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIClosingCstSrc1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIClosingCstSrc2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIClosingCstSrc3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIClosingCstSrc4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIDownPmtAmt1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIDownPmtAmt2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIDownPmtAmt3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIDownPmtAmt4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIDownPmtSrc1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIDownPmtSrc2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIDownPmtSrc3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHIDownPmtSrc4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHISecdFinAmt1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHISecdFinAmt2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHISecdFin1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHISecdFin2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ClosingInfoTxt1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ClosingInfoTxt2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ClosingInfoTxt3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ClosingInfoTxt4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCodeDesc1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCodeDesc2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCodeNum1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCodeNum2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode1" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode5" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode6" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode7" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode8" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode9" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode10" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode11" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode12" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode13" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode14" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode15" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode16" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode17" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode18" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode19" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode20" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode21" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode22" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode23" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode24" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode25" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode26" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode27" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode28" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode29" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode30" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode31" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode32" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode33" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode34" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UserCode35" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="DlqNumCurQtr" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="DlqNumQtr2" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="DlqNumQtr3" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="DlqNumQtr4" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ARMInfoCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AffLnFlg" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AltPmtSched" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CBSpecCmntCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CureDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ForeclosureDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="InsufNotFeePaidYTD" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="LastActDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="LastRePriceDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="LnUsrStatCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OffCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PastDueHistFlg" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PastDueNots" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="PrimRiskRating" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="RenExtCurMonthCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ShadowProcFlg" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="SpecLndingFlg" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UnitPricedAccts" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="ShadowStatCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigCapRate" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigAppraisalDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigSeniorLien" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigDSCRatio" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CurDSCRatio" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigAvgLeaseRate" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigDebtSvc" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigActualNOI" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="LnOriginatorId" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigBorwDTOI" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigCoBorwDTOI" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigAppraisalAmt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CurSeniorLienAmt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwRace2" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwRace3" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwRace4" type="xs:string" />
+      <xsd:element minOccurs="0" name="CoBorwRace5" type="xs:string" />
+      <xsd:element minOccurs="0" name="UseDDAHldForODPXfer" type="xs:string" />
+      <xsd:element minOccurs="0" name="FraudAlert" type="xs:string" />
+      <xsd:element minOccurs="0" name="NewPrevRate" type="xs:string" />
+      <xsd:element minOccurs="0" name="IntFirstProd" type="xs:string" />
+      <xsd:element minOccurs="0" name="StepRateLn" type="xs:string" />
+      <xsd:element minOccurs="0" name="AppraiserStateLicense" type="xs:string" />
+      <xsd:element minOccurs="0" name="SupvAppraiserStateLicense" type="xs:string" />
+      <xsd:element minOccurs="0" name="ApprDocFileId" type="xs:string" />
+      <xsd:element minOccurs="0" name="OrigRate" type="xs:string" />
+      <xsd:element minOccurs="0" name="FirstRateChngDt" type="xs:string" />
+      <xsd:element minOccurs="0" name="BnkRptcyDt" type="xs:string" />
+      <xsd:element minOccurs="0" name="RecoupAssessedCurPeriod" type="xs:string" />
+      <xsd:element minOccurs="0" name="RecoupRateInEffect" type="xs:string" />
+      <xsd:element minOccurs="0" name="SplitRiskRating2Amt" type="xs:string" />
+      <xsd:element minOccurs="0" name="SplitRiskRating3Amt" type="xs:string" />
+      <xsd:element minOccurs="0" name="SplitRiskRating1Amt" type="xs:string" />
+      <xsd:element minOccurs="0" name="SplitRiskRating2" type="xs:string" />
+      <xsd:element minOccurs="0" name="SplitRiskRating3" type="xs:string" />
+      <xsd:element minOccurs="0" name="SplitRiskRating1" type="xs:string" />
+      <xsd:element minOccurs="0" name="SplitRiskRating2Pct" type="xs:string" />
+      <xsd:element minOccurs="0" name="SplitRiskRating3Pct" type="xs:string" />
+      <xsd:element minOccurs="0" name="SplitRiskRating1CalcPos" type="xs:string" />
+      <xsd:element minOccurs="0" name="PayoffPendExpDt" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="StmtPasCode" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="CrLifeInsurAccrRounded" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="AHInsurAccrRounded" nillable="true" type="xs:string" />
+      <xsd:element minOccurs="0" name="UEInsurAccrRounded" nillable="true" type="xs:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
