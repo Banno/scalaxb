@@ -29,13 +29,14 @@ trait Args extends Params {
   private val logger = Log.forName("xsd.Args")
 
   def buildFromXML(typeName: String): String = "scalaxb.fromXML[" + typeName + "]"
-  def buildFromXML(typeName: String, selector: String, stackItem: Option[String], formatter: Option[String]): String =
+  def buildFromXML(typeName: String, selector: String, stackItem: Option[String], formatter: Option[String]): String = {
     buildFromXML(typeName) + "(%s, %s)%s".format(selector,
       stackItem map {
         case "stack" => "stack"
         case x       => "scalaxb.ElemName(" + x + ") :: stack"
       } getOrElse {"Nil"},
       formatter map {"(" + _ + ")"} getOrElse {""})
+  }
 
   def buildToXML(typeName: String, args: String, formatter: Option[String]): String =
     "scalaxb.toXML[" + typeName + "](" + args + ")" + (formatter map { "(" + _ + ")" } getOrElse "")
@@ -45,10 +46,12 @@ trait Args extends Params {
 
   // called by buildConverter
   def buildArg(selector: String, typeSymbol: XsTypeSymbol, stackItem: Option[String]): String = typeSymbol match {
-    case AnyType(symbol)                            => selector
-    case symbol: BuiltInSimpleTypeSymbol            => buildArg(buildTypeName(symbol), selector, Single, stackItem, buildFormatterFromSymbol(symbol))
-    case ReferenceTypeSymbol(decl: SimpleTypeDecl)  => buildArg(buildTypeName(baseType(decl)), selector, Single, stackItem, buildFormatterOption(decl))
-    case ReferenceTypeSymbol(decl: ComplexTypeDecl) => buildFromXML(buildTypeName(typeSymbol), selector, stackItem, buildFormatterOption(decl))
+        case AnyType(symbol)                            => selector
+        case symbol: BuiltInSimpleTypeSymbol            => buildArg(buildTypeName(symbol), selector, Single, stackItem, buildFormatterFromSymbol(symbol))
+        case ReferenceTypeSymbol(decl: SimpleTypeDecl)  =>
+          buildArg(buildTypeName(decl, false), selector, Single, stackItem, buildFormatterOption(decl))
+          //buildArg(buildTypeName(baseType(decl)), selector, Single, stackItem, buildFormatterOption(decl))
+        case ReferenceTypeSymbol(decl: ComplexTypeDecl) => buildFromXML(buildTypeName(typeSymbol), selector, stackItem, buildFormatterOption(decl))
   }
 
   def buildArg(typeName: String, selector: String, cardinality: Cardinality, stackItem: Option[String], formatter: Option[String],
