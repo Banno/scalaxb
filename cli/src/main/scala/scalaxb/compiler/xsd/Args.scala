@@ -252,9 +252,9 @@ trait Args extends Params {
     //              nillable: Boolean = false, defaultValue: Option[String] = None, fixedValue: Option[String] = None,
     //              wrapForLongAll: Boolean = false): String = {
 
-    case AnyType(symbol) => buildArg(buildTypeName(symbol), "node", Single, None, buildFormatterFromSymbol(symbol))
+    case AnyType(symbol) => buildArg(buildTypeName(symbol), "node", Single, Some("node"), buildFormatterFromSymbol(symbol))
 
-    case base: BuiltInSimpleTypeSymbol => buildArg(buildTypeName(base), "node", Single, None, buildFormatterFromSymbol(base))
+    case base: BuiltInSimpleTypeSymbol => buildArg(buildTypeName(base), "node", Single, Some("node"), buildFormatterFromSymbol(base))
 // >>>>>>> try/explicit
 
     case ReferenceTypeSymbol(decl: ComplexTypeDecl) =>
@@ -274,7 +274,7 @@ trait Args extends Params {
 // <<<<<<< HEAD
 //       buildArg(buildTypeName(decl, false), "node", Single, Some("node"), false, None, None, false)
 // =======
-      buildArg(buildTypeName(decl, false), "node", Single, None, buildFormatterOption(decl), false, None, None, false)
+      buildArg(buildTypeName(decl, false), "node", Single, Some("node"), buildFormatterOption(decl), false, None, None, false)
 // >>>>>>> try/explicit
 
     case _ => sys.error("Args: Unsupported type " + typeSymbol.toString)
