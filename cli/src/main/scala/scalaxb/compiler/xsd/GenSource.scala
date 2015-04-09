@@ -117,12 +117,6 @@ abstract class GenSource(val schema: SchemaDecl,
       "case (" + quoteNamespace(decl.namespace) + ", " + quote(Some(decl.family.head)) + ") => " +
       "Right(" + buildFromXML(buildTypeName(decl, false), "node", Some("stack"), buildFormatterOption(decl)) + ")"
 
-// <<<<<<< HEAD
-//         "Right(" + buildFromXML(buildTypeName(decl, false), "node", Some("stack"), None) + ")"
-// =======
-//         "Right(" + buildFromXML(buildTypeName(decl, false), "node", "stack", buildFormatterOption(decl)) + ")"
-// >>>>>>> try/explicit
-
     def makeToXmlCaseEntry(decl: ComplexTypeDecl) = {
       val localName = buildTypeName(decl, false)
       "case x: " + localName + " => " +
@@ -161,13 +155,7 @@ abstract class GenSource(val schema: SchemaDecl,
             cases.mkString(newline + indent(4 + compDepth))
           }
 
-          { if (!decl.abstractValue) "case _ => Right(" + buildFromXML(defaultType, "node", Some("stack"), None) + ")"
-
-// <<<<<<< HEAD
-//           { if (!decl.abstractValue) "case _ => Right(" + buildFromXML(defaultType, "node", Some("stack"), None) + ")"
-// =======
-//           { if (!decl.abstractValue) "case _ => Right(" + buildFromXML(defaultType, "node", "stack", None) + ")" // @TODO formatter
-// >>>>>>> try/explicit
+          { if (!decl.abstractValue) "case _ => Right(" + buildFromXML(defaultType, "node", Some("stack"), None) + ")" // @TODO Formatter
 
             else """case x => Left("Unknown type: " + x)""" }
         }}
@@ -182,11 +170,6 @@ abstract class GenSource(val schema: SchemaDecl,
       }
       { if (!decl.abstractValue) "case x: " + defaultType + " => " +
         buildToXML(defaultType, "x, __namespace, __elementLabel, __scope, false", None) // @TODO formatter
-// <<<<<<< HEAD
-//           buildToXML(defaultType, "x, __namespace, __elementLabel, __scope, false")
-// =======
-//           buildToXML(defaultType, "x, __namespace, __elementLabel, __scope, false", None) // @TODO formatter
-// >>>>>>> try/explicit
         else """case _ => sys.error("Unknown type: " + __obj)"""
       }
     }}
@@ -370,26 +353,12 @@ abstract class GenSource(val schema: SchemaDecl,
         case _ => "Seq(scala.xml.Text(__obj.value.toString))"
       }
 
-// <<<<<<< HEAD
-      // def childString(decl: ComplexTypeDecl): String =
-      //   if (effectiveMixed) "__obj." + makeParamName(MIXED_PARAM, false) +
-      //     ".toSeq flatMap { x => " + buildToXML("scalaxb.DataRecord[Any]", "x, x.namespace, x.key, __scope, false") + " }"
-      //   else decl.content.content match {
-      //     case SimpContRestrictionDecl(ReferenceTypeSymbol(base: ComplexTypeDecl), _, _, _) => childString(base)
-      //     case SimpContExtensionDecl(ReferenceTypeSymbol(base: ComplexTypeDecl), _) => childString(base)
-      //     case SimpContRestrictionDecl(base: XsTypeSymbol, _, _, _) => simpleContentString(base)
-      //     case SimpContExtensionDecl(base: XsTypeSymbol, _)         => simpleContentString(base)
-      //     case _ =>
-      //       if (childElemParams.isEmpty) "Nil"
-      //       else if (childElemParams.size == 1) "(" + buildXMLString(childElemParams(0)) + ")"
-      //       else childElemParams.map(x =>
-      //         buildXMLString(x)).mkString("Seq.concat(", "," + newline + indent(4), ")")
-      //   }
-// =======
-      def childString = if (decl.mixed) "__obj." + makeParamName(MIXED_PARAM, false) +
+      def childString(decl: ComplexTypeDecl):String = if (effectiveMixed) "__obj." + makeParamName(MIXED_PARAM, false) +
         ".toSeq flatMap { x => " + buildToXML("scalaxb.DataRecord[Any]", "x, x.namespace, x.key, __scope, false",
           Some("__DataRecordAnyXMLFormat")) + " }"
       else decl.content.content match {
+        case SimpContRestrictionDecl(ReferenceTypeSymbol(base: ComplexTypeDecl), _, _, _) => childString(base)
+        case SimpContExtensionDecl(ReferenceTypeSymbol(base: ComplexTypeDecl), _) => childString(base)
         case SimpContRestrictionDecl(base: XsTypeSymbol, _, _, _) => simpleContentString(base)
         case SimpContExtensionDecl(base: XsTypeSymbol, _)         => simpleContentString(base)
         case _ =>
@@ -398,10 +367,9 @@ abstract class GenSource(val schema: SchemaDecl,
           else childElemParams.map(x =>
             buildXMLString(x)).mkString("Seq.concat(", "," + newline + indent(4), ")")
       }
-// >>>>>>> try/explicit
 
       <source>    def writesChildNodes(__obj: {fqn}, __scope: scala.xml.NamespaceBinding): Seq[scala.xml.Node] =
-      {childString}</source>
+      {childString(decl)}</source>
     }
 
     val groups = filterGroup(decl).distinct filter { g => primaryCompositor(g).particles.size > 0 }

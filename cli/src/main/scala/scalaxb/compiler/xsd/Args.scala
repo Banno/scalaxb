@@ -198,12 +198,6 @@ trait Args extends Params {
 
         // todo: Uhh?
 
-        // buildArg(buildTypeName(XsQName), selector, toCardinality(attr), stackItem, false,
-        //          attr.defaultValue, attr.fixedValue, wrapForLong, Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"))
-
-        // buildArg(buildTypeName(XsQName), selector, toCardinality(attr), Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"), false,
-        //          attr.defaultValue, attr.fixedValue, wrapForLong)
-
         buildArg(buildTypeName(XsQName), selector, toCardinality(attr), stackItem, Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"), false,
                  attr.defaultValue, attr.fixedValue, wrapForLong)
 
@@ -213,12 +207,6 @@ trait Args extends Params {
 
       // special treatment for QName attributes
       case ReferenceTypeSymbol(decl: SimpleTypeDecl) if buildTypeName(decl, false) == buildTypeName(XsQName) =>
-
-        // buildArg(buildTypeName(decl, false), selector, toCardinality(attr), stackItem, false,
-        //          attr.defaultValue, attr.fixedValue, wrapForLong, Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"))
-
-        // buildArg(buildTypeName(decl, false), selector, toCardinality(attr), Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"), false,
-        //          attr.defaultValue, attr.fixedValue, wrapForLong)
 
         buildArg(buildTypeName(decl, false), selector, toCardinality(attr), stackItem, Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"), false,
                  attr.defaultValue, attr.fixedValue, wrapForLong)
@@ -237,25 +225,9 @@ trait Args extends Params {
   // called by makeCaseClassWithType
   def buildArg(content: SimpleContentDecl, typeSymbol: XsTypeSymbol): String = typeSymbol match {
 
-// <<<<<<< HEAD
-//     case AnyType(symbol) => buildArg(buildTypeName(symbol), "node", Single, Some("node"))
-//     case base: BuiltInSimpleTypeSymbol => buildArg(buildTypeName(base), "node", Single, Some("node"))
-// =======
-// [error] /Users/adam/src/banno/scalaxb/cli/src/main/scala/scalaxb/compiler/xsd/Args.scala:241: overloaded method value buildArg with alternatives:
-// [error]   (attr: scalaxb.compiler.xsd.AttributeDecl,selector: String,stackItem: Option[String],wrapForLong: Boolean)String <and>
-// [error]   (elem: scalaxb.compiler.xsd.ElemDecl,selector: String,stackItem: Option[String],wrapForLongAll: Boolean)String
-// [error]  cannot be applied to (String, String, scalaxb.compiler.xsd.Single.type, Option[String])
-// [error]     case AnyType(symbol) => buildArg(buildTypeName(symbol), "node", Single, buildFormatterFromSymbol(symbol))
-// [error]                             ^
-
-    // def buildArg(typeName: String, selector: String, cardinality: Cardinality, stackItem: Option[String], formatter: Option[String],
-    //              nillable: Boolean = false, defaultValue: Option[String] = None, fixedValue: Option[String] = None,
-    //              wrapForLongAll: Boolean = false): String = {
-
     case AnyType(symbol) => buildArg(buildTypeName(symbol), "node", Single, Some("node"), buildFormatterFromSymbol(symbol))
 
     case base: BuiltInSimpleTypeSymbol => buildArg(buildTypeName(base), "node", Single, Some("node"), buildFormatterFromSymbol(base))
-// >>>>>>> try/explicit
 
     case ReferenceTypeSymbol(decl: ComplexTypeDecl) =>
       decl.content match {
@@ -271,11 +243,7 @@ trait Args extends Params {
         case _ => sys.error("Args: Unsupported content " + content.toString)
       }
     case ReferenceTypeSymbol(decl: SimpleTypeDecl) =>
-// <<<<<<< HEAD
-//       buildArg(buildTypeName(decl, false), "node", Single, Some("node"), false, None, None, false)
-// =======
       buildArg(buildTypeName(decl, false), "node", Single, Some("node"), buildFormatterOption(decl), false, None, None, false)
-// >>>>>>> try/explicit
 
     case _ => sys.error("Args: Unsupported type " + typeSymbol.toString)
   }
