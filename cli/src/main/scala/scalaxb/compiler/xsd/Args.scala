@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2010 e.e d3si9n
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 package scalaxb.compiler.xsd
 
 import scalashim._
@@ -29,40 +29,41 @@ trait Args extends Params {
   private val logger = Log.forName("xsd.Args")
 
   def buildFromXML(typeName: String): String = "scalaxb.fromXML[" + typeName + "]"
-  def buildFromXML(typeName: String, selector: String, stackItem: Option[String], formatter: Option[String]): String =
+  def buildFromXML(typeName: String, selector: String, stackItem: Option[String], formatter: Option[String]): String = {
     buildFromXML(typeName) + "(%s, %s)%s".format(selector,
       stackItem map {
         case "stack" => "stack"
         case x       => "scalaxb.ElemName(" + x + ") :: stack"
       } getOrElse {"Nil"},
       formatter map {"(" + _ + ")"} getOrElse {""})
-  
-  def buildToXML(typeName: String, args: String): String =
-    "scalaxb.toXML[" + typeName + "](" + args + ")"
-        
+  }
+
+  def buildToXML(typeName: String, args: String, formatter: Option[String]): String =
+    "scalaxb.toXML[" + typeName + "](" + args + ")" + (formatter map { "(" + _ + ")" } getOrElse "")
+
   def buildFromString(typeName: String, selector: String): String =
     typeName + ".fromString(" + selector + ")"
-  
+
   // called by buildConverter
   def buildArg(selector: String, typeSymbol: XsTypeSymbol, stackItem: Option[String]): String = typeSymbol match {
-    case AnyType(symbol)                            => selector
-    case symbol: BuiltInSimpleTypeSymbol            => buildArg(buildTypeName(symbol), selector, Single, stackItem)
-    case ReferenceTypeSymbol(decl: SimpleTypeDecl)  => buildArg(buildTypeName(baseType(decl)), selector, Single, stackItem)
-    case ReferenceTypeSymbol(decl: ComplexTypeDecl) =>
-      buildFromXML(buildTypeName(typeSymbol), selector, stackItem, None)
+        case AnyType(symbol)                            => selector
+        case symbol: BuiltInSimpleTypeSymbol            => buildArg(buildTypeName(symbol), selector, Single, stackItem, buildFormatterFromSymbol(symbol))
+        case ReferenceTypeSymbol(decl: SimpleTypeDecl)  =>
+          buildArg(buildTypeName(decl, false), selector, Single, stackItem, buildFormatterOption(decl))
+          //buildArg(buildTypeName(baseType(decl)), selector, Single, stackItem, buildFormatterOption(decl))
+        case ReferenceTypeSymbol(decl: ComplexTypeDecl) => buildFromXML(buildTypeName(typeSymbol), selector, stackItem, buildFormatterOption(decl))
   }
-  
-  def buildArg(typeName: String, selector: String, cardinality: Cardinality,
-      stackItem: Option[String],
+
+  def buildArg(typeName: String, selector: String, cardinality: Cardinality, stackItem: Option[String], formatter: Option[String],
       nillable: Boolean = false, defaultValue: Option[String] = None, fixedValue: Option[String] = None,
-      wrapForLongAll: Boolean = false, formatter: Option[String] = None): String = {
+      wrapForLongAll: Boolean = false): String = {
     val stack = "scalaxb.ElemName(node) :: stack"
     def fromU = buildFromXML(typeName, "_", stackItem, formatter)
     def fromValue(x: String) = buildFromXML(typeName, "scala.xml.Text(" + quote(x) + ")", stackItem, formatter)
 
     val retval = if (wrapForLongAll) {
       // PrefixedAttribute only contains pre, so you need to pass in node to get the namespace.
-      if (selector.contains("@")) 
+      if (selector.contains("@"))
         (defaultValue, fixedValue) match {
           case (_, Some(x)) =>
             "Some(scalaxb.DataRecord(None, None, " + fromValue(x) + "))"
@@ -86,7 +87,7 @@ trait Args extends Params {
       case (Single, _, _) =>
         buildSingleArg(typeName, selector, stackItem, nillable, defaultValue, fixedValue, formatter)
     }
-    
+
     retval
   }
 
@@ -96,14 +97,14 @@ trait Args extends Params {
     def fromValue(x: String) = buildFromXML(typeName, "scala.xml.Text(" + quote(x) + ")", stackItem, formatter)
     def fromX(x: String) = buildFromXML(typeName, x, stackItem, formatter)
 
-    (nillable, defaultValue, fixedValue) match { 
+    (nillable, defaultValue, fixedValue) match {
       case ( _, _, Some(x))   => fromValue(x)
       case (true, _, _)       => selector + ".nilOption map { " + fromX("_") + " }"
       case (_, Some(x), _)    => selector + ".headOption map { " + fromX("_") + " } getOrElse { " + fromValue(x) + " }"
       case (false, _, _)      => fromX(selector)
     }
   }
-      
+
   def buildArg(decl: Decl): String = decl match {
     case elem: ElemDecl        => buildArg(elem, 0)
     case attr: AttributeDecl   => buildArg(attr, buildSelector(attr), Some("node"), false)
@@ -111,7 +112,7 @@ trait Args extends Params {
     case group: AttributeGroupDecl => buildAttributeGroupArg(group, false)
     case _ => sys.error("GenSource#buildArg unsupported delcaration " + decl.toString)
   }
-  
+
   def buildArgForAttribute(decl: AttributeLike, stackItem: Option[String], longAttribute: Boolean): String =
     if (longAttribute) {
       decl match {
@@ -126,9 +127,9 @@ trait Args extends Params {
         case group: AttributeGroupDecl => buildAttributeGroupArg(group, longAttribute)
       }
     } else buildArg(decl)
-    
+
   def toOptional(that: ElemDecl) = that.copy(minOccurs = 0, annotation = None)
-    
+
   // called by makeCaseClassWithType. By spec, <all> contains only elements.
   def buildArgForAll(particle: Particle, longAll: Boolean): String = {
     val o = particle match {
@@ -140,20 +141,23 @@ trait Args extends Params {
     if (longAll) arg + " map { " + quote(buildNodeName(o, true)) + " -> _ }"
     else arg
   }
-  
+
   def buildArg(elem: ElemDecl, pos: Int): String =
     buildArg(elem, buildSelector(pos), Some("node"), false)
-  
+
   def buildArg(elem: ElemDecl, selector: String, stackItem: Option[String], wrapForLongAll: Boolean): String =
     if ((isSubstitutionGroup(elem))) selector
     else elem.typeSymbol match {
-      case symbol: BuiltInSimpleTypeSymbol => buildArg(buildTypeName(symbol), selector,
-        toCardinality(elem.minOccurs, elem.maxOccurs), stackItem,
-        elem.nillable getOrElse(false), elem.defaultValue, elem.fixedValue, wrapForLongAll)
+      case symbol: BuiltInSimpleTypeSymbol =>
+        buildArg(buildTypeName(symbol), selector,
+                 toCardinality(elem.minOccurs, elem.maxOccurs), stackItem, buildFormatterFromSymbol(symbol),
+                 elem.nillable getOrElse(false), elem.defaultValue, elem.fixedValue, wrapForLongAll)
+
       case ReferenceTypeSymbol(decl: SimpleTypeDecl) =>
         buildArg(buildTypeName(decl, false), selector,
-          toCardinality(elem.minOccurs, elem.maxOccurs), stackItem,
-          elem.nillable getOrElse(false), elem.defaultValue, elem.fixedValue, wrapForLongAll)
+                 toCardinality(elem.minOccurs, elem.maxOccurs), stackItem, buildFormatterOption(decl),
+                 elem.nillable getOrElse(false), elem.defaultValue, elem.fixedValue, wrapForLongAll)
+
       case ReferenceTypeSymbol(decl: ComplexTypeDecl) =>
         if (compositorWrapper.contains(decl))
           (toCardinality(elem.minOccurs, elem.maxOccurs), elem.nillable getOrElse {false}) match {
@@ -161,15 +165,24 @@ trait Args extends Params {
             case (Optional, true) => selector + " getOrElse { None }"
             case _ => selector
           }
-        else buildArg(buildTypeName(decl, false), selector, 
-          toCardinality(elem.minOccurs, elem.maxOccurs), stackItem,
-          elem.nillable getOrElse(false), elem.defaultValue, elem.fixedValue, wrapForLongAll)
-      case AnyType(symbol) => buildArg(
-          if (elem.nillable getOrElse(false)) buildTypeName(XsNillableAny)
-          else buildTypeName(symbol), selector,
-        toCardinality(elem.minOccurs, elem.maxOccurs), stackItem,
-        false, elem.defaultValue, elem.fixedValue, wrapForLongAll)
-      
+
+        else buildArg(buildTypeName(decl, false), selector,
+                      toCardinality(elem.minOccurs, elem.maxOccurs), stackItem, buildFormatterOption(decl),
+                      elem.nillable getOrElse(false), elem.defaultValue, elem.fixedValue, wrapForLongAll)
+
+      case AnyType(symbol) =>
+        buildArg(
+          if (elem.nillable getOrElse(false)) buildTypeName(XsNillableAny) else buildTypeName(symbol),
+          selector,
+          toCardinality(elem.minOccurs, elem.maxOccurs),
+          stackItem,
+          if (elem.nillable getOrElse(false)) buildFormatterFromSymbol(XsNillableAny) else buildFormatterFromSymbol(elem.typeSymbol),
+          false,
+          elem.defaultValue,
+          elem.fixedValue,
+          wrapForLongAll
+        )
+
       case symbol: ReferenceTypeSymbol =>
         if (symbol.decl == null) sys.error("GenSource#buildArg: " + elem.toString + " Invalid type " + symbol.getClass.toString + ": " +
             symbol.toString + " with null decl")
@@ -177,39 +190,50 @@ trait Args extends Params {
             symbol.toString + " with " + symbol.decl.toString)
       case _ => sys.error("GenSource#buildArg: " + elem.toString + " Invalid type " + elem.typeSymbol.getClass.toString + ": " + elem.typeSymbol.toString)
     }
-  
+
   def buildArg(attr: AttributeDecl, selector: String, stackItem: Option[String], wrapForLong: Boolean): String =
     attr.typeSymbol match {
       // special treatment for QName attributes
       case XsQName =>
-        buildArg(buildTypeName(XsQName), selector, toCardinality(attr), stackItem, false,
-          attr.defaultValue, attr.fixedValue, wrapForLong, Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"))
+
+        // todo: Uhh?
+
+        buildArg(buildTypeName(XsQName), selector, toCardinality(attr), stackItem, Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"), false,
+                 attr.defaultValue, attr.fixedValue, wrapForLong)
+
       case symbol: BuiltInSimpleTypeSymbol =>
-        buildArg(buildTypeName(symbol), selector, toCardinality(attr), stackItem, false,
-          attr.defaultValue, attr.fixedValue, wrapForLong)
+        buildArg(buildTypeName(symbol), selector, toCardinality(attr), stackItem, buildFormatterFromSymbol(symbol), false,
+                 attr.defaultValue, attr.fixedValue, wrapForLong)
 
       // special treatment for QName attributes
       case ReferenceTypeSymbol(decl: SimpleTypeDecl) if buildTypeName(decl, false) == buildTypeName(XsQName) =>
-        buildArg(buildTypeName(decl, false), selector, toCardinality(attr), stackItem, false,
-          attr.defaultValue, attr.fixedValue, wrapForLong, Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"))
+
+        buildArg(buildTypeName(decl, false), selector, toCardinality(attr), stackItem, Some("scalaxb.XMLStandardTypes.qnameXMLFormat(node.scope)"), false,
+                 attr.defaultValue, attr.fixedValue, wrapForLong)
+
       case ReferenceTypeSymbol(decl: SimpleTypeDecl) =>
-        buildArg(buildTypeName(decl, false), selector, toCardinality(attr), stackItem, false,
-          attr.defaultValue, attr.fixedValue, wrapForLong)
+        buildArg(buildTypeName(decl, false), selector, toCardinality(attr), stackItem, buildFormatterOption(decl), false,
+                 attr.defaultValue, attr.fixedValue, wrapForLong)
+
       case ReferenceTypeSymbol(decl: ComplexTypeDecl) =>
         sys.error("Args: Attribute with complex type " + decl.toString)
+
       case _ =>
         sys.error("Args: unsupported type: " + attr.typeSymbol)
     }
 
   // called by makeCaseClassWithType
   def buildArg(content: SimpleContentDecl, typeSymbol: XsTypeSymbol): String = typeSymbol match {
-    case AnyType(symbol) => buildArg(buildTypeName(symbol), "node", Single, Some("node"))
-    case base: BuiltInSimpleTypeSymbol => buildArg(buildTypeName(base), "node", Single, Some("node"))
+
+    case AnyType(symbol) => buildArg(buildTypeName(symbol), "node", Single, Some("node"), buildFormatterFromSymbol(symbol))
+
+    case base: BuiltInSimpleTypeSymbol => buildArg(buildTypeName(base), "node", Single, Some("node"), buildFormatterFromSymbol(base))
+
     case ReferenceTypeSymbol(decl: ComplexTypeDecl) =>
       decl.content match {
-        case simp@SimpleContentDecl(SimpContRestrictionDecl(base: XsTypeSymbol, _, _, _)) => buildArg(simp, base)      
-        case simp@SimpleContentDecl(SimpContExtensionDecl(base: XsTypeSymbol, _)) => buildArg(simp, base)        
-        
+        case simp@SimpleContentDecl(SimpContRestrictionDecl(base: XsTypeSymbol, _, _, _)) => buildArg(simp, base)
+        case simp@SimpleContentDecl(SimpContExtensionDecl(base: XsTypeSymbol, _)) => buildArg(simp, base)
+
         // http://www.w3.org/TR/xmlschema-1/#d0e7923
         case comp: ComplexContentDecl => content match {
           case SimpleContentDecl(SimpContRestrictionDecl(_, Some(simpleType: XsTypeSymbol), _, _))  =>
@@ -219,9 +243,9 @@ trait Args extends Params {
         case _ => sys.error("Args: Unsupported content " + content.toString)
       }
     case ReferenceTypeSymbol(decl: SimpleTypeDecl) =>
-      buildArg(buildTypeName(decl, false), "node", Single, Some("node"), false, None, None, false)
-        
-    case _ => sys.error("Args: Unsupported type " + typeSymbol.toString)    
+      buildArg(buildTypeName(decl, false), "node", Single, Some("node"), buildFormatterOption(decl), false, None, None, false)
+
+    case _ => sys.error("Args: Unsupported type " + typeSymbol.toString)
   }
 
   // scala's <foo/> \ "foo" syntax is not namespace aware, but {ns}foo is useful for long all.
@@ -240,29 +264,29 @@ trait Args extends Params {
     else if (prependNamespace && attr.qualified) "@" +
       (elementNamespace(attr.global, attr.namespace, attr.qualified) map { "{" + _ + "}" } getOrElse {""}) + attr.name
     else "@" + attr.name
-  
-  def buildNodeName(group: AttributeGroupDecl): String = 
+
+  def buildNodeName(group: AttributeGroupDecl): String =
     if (group.namespace == schema.targetNamespace) group.name
     else (group.namespace map { "{" + _ + "}" } getOrElse {""}) + group.name
-  
+
   def buildSelector(elem: ElemDecl): String = buildSelector(buildNodeName(elem, false))
   def buildSelector(pos: Int): String = "p" + (pos + 1)
   def buildSelector(attr: AttributeDecl): String = buildSelector(buildNodeName(attr, true))
   def buildSelector(nodeName: String): String = "(node \\ \"" + nodeName + "\")"
-  
+
   def buildArgForAnyAttribute(parent: ComplexTypeDecl, longAttribute: Boolean): String =
     buildArgForAnyAttribute(flattenAttributes(parent), longAttribute)
-  
+
   def buildArgForAnyAttribute(parent: AttributeGroupDecl, longAttribute: Boolean): String =
     buildArgForAnyAttribute(flattenAttributes(parent.attributes), longAttribute)
-  
+
   def buildArgForAnyAttribute(attributes: List[AttributeLike], longAttribute: Boolean): String = {
     def makeCaseEntry(attr: AttributeDecl) = if (attr.global || attr.qualified)
       "case scala.xml.PrefixedAttribute(pre, key, value, _) if pre == elem.scope.getPrefix(" +
         (attr.namespace map { quote(_) } getOrElse { "null" }) + ") &&" + newline +
       indent(8) + "key == " + quote(attr.name) + " => Nil"
     else "case scala.xml.UnprefixedAttribute(key, value, _) if key == " + quote(attr.name) + " => Nil"
-    
+
     val xs = "node match {" + newline +
     indent(5) + "case elem: scala.xml.Elem =>" + newline +
     indent(5) + "  elem.attributes.toList flatMap {" + newline +
@@ -278,14 +302,14 @@ trait Args extends Params {
     indent(5) + "  }" + newline +
     indent(5) + "case _ => Nil" + newline +
     indent(4) + "}"
-    
+
     if (longAttribute) xs
     else "scala.collection.immutable.ListMap((" + xs + "): _*)"
   }
-    
+
   def buildArgForMixed(particle: Particle, pos: Int, ignoreSubGroup: Boolean): String =
     buildArgForMixed(particle, buildSelector(pos), ignoreSubGroup)
-  
+
   // sub groups behave like a choice
   def buildArgForMixed(particle: Particle, selector: String, ignoreSubGroup: Boolean): String = {
     val cardinality = toCardinality(particle.minOccurs, particle.maxOccurs)
@@ -299,12 +323,12 @@ trait Args extends Params {
           case ReferenceTypeSymbol(decl: ComplexTypeDecl) =>
             if (compositorWrapper.contains(decl)) true
             else false
-          case _ => false 
+          case _ => false
         }
       case x: HasParticle => true
-      case _ => false      
+      case _ => false
     }
-    
+
     val retval = cardinality match {
       case Multiple =>
         if (isCompositor(particle)) selector + ".flatten"
@@ -316,18 +340,18 @@ trait Args extends Params {
         if (isCompositor(particle)) selector
         else "Seq(" + selector + ")"
     }
-    
+
     logger.debug("buildArgForMixed: " + cardinality + ": " + particle + ": " + retval)
     retval
   }
-  
+
   def buildArgForOptTextRecord(pos: Int): String =
     buildSelector(pos) + ".toList"
-    
+
   def buildAttributeGroupArg(group: AttributeGroupDecl, longAttribute: Boolean): String = {
-    val formatterName = buildFormatterName(group)
+    val formatterName = buildFormatterOption(group).get
     val arg = formatterName + ".reads(node).right"
-    if (longAttribute) arg + ".toOption map { x => " + 
+    if (longAttribute) arg + ".toOption map { x => " +
       quote(buildNodeName(group)) + " -> scalaxb.DataRecord(None, None, x) }"
     else arg + ".get"
   }
@@ -353,7 +377,7 @@ trait Args extends Params {
     if (anyAttributes.isEmpty) notAnyAttributes
     else notAnyAttributes ::: List(anyAttributes.head)
   }
-  
+
   // return a list of either AttributeDecl or AnyAttributeDecl
   def flattenAttributes(attributes: List[AttributeLike]): List[AttributeLike] =
     attributes flatMap {

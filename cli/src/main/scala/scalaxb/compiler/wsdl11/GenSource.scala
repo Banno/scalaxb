@@ -231,7 +231,7 @@ trait {interfaceTypeName} {{
           if (isEmptyPart(input, binding.input)) ""
           else if (!isMultiPart(input, binding.input)) buildIRIStyleArgs(input) map {_.toScalaCode} mkString(", ")
           else makeOperationInputArgs(binding, intf) map {_.toScalaCode} mkString(", ")
-        case RpcStyle => 
+        case RpcStyle =>
           buildRPCStyleArgs(input) map {_.toScalaCode} mkString(", ")
       }
     val name = escapeKeyWord(camelCase(op.name))
@@ -362,7 +362,7 @@ trait {interfaceTypeName} {{
       case (DataRecord(_, _, XRequestresponseoperationSequence(input, output, faults)), true) =>
         // "def %s(%s): Option[scalaxb.Fault[%s]]".format(op.name, arg(input), faultsToTypeName(faults))
         """soapClient.requestResponse(%s,
-          |            %s, defaultScope, %s, %s, %s).transform({ case (header, body) => 
+          |            %s, defaultScope, %s, %s, %s).transform({ case (header, body) =>
           |            %s }, {
           |""".stripMargin.format(
             bodyString(op, input, binding, soapBindingStyle),
@@ -389,7 +389,7 @@ trait {interfaceTypeName} {{
       case (DataRecord(_, _, XSolicitresponseoperationSequence(output, input, faults)), true) =>
         // "def %s(%s): Either[scalaxb.Fault[Any], %s]".format(op.name, arg(input), paramTypeName)
         """soapClient.requestResponse(%s,
-          |            %s, defaultScope, %s, %s, %s).transform({ case (header, body) => 
+          |            %s, defaultScope, %s, %s, %s).transform({ case (header, body) =>
           |            %s }, {
           |""".stripMargin.format(
             bodyString(op, input, binding, soapBindingStyle),
@@ -444,13 +444,13 @@ trait {interfaceTypeName} {{
         case DataRecord(_, Some("body"), node: Node) => node
       } headOption
     }
-    val literal = 
+    val literal =
       b flatMap { node =>
         (node \ "@use").headOption map {_.text == "literal"}
       } getOrElse {true}
     if (!literal) {
       sys.error(encodedErrorMessage)
-    } // if    
+    } // if
     BodyBinding(
       b flatMap { node => (node \ "@encodingStyle").headOption map {_.text} },
       b flatMap { node => (node \ "@namespace").headOption map {_.text} }
@@ -536,7 +536,7 @@ trait {interfaceTypeName} {{
         case RpcStyle if p.element.isDefined =>
           ("\"%s\"".format(toElement(p).name), toElement(p).namespace)
         case RpcStyle =>
-          ("\"%s\"".format(p.name.getOrElse {"in"}), b.namespace)        
+          ("\"%s\"".format(p.name.getOrElse {"in"}), b.namespace)
         // If the operation style is document there are no additional wrappers, and the message parts appear directly under the SOAP Body element.
         case DocumentStyle if p.element.isDefined =>
           ("\"%s\"".format(toElement(p).name), toElement(p).namespace)
@@ -545,7 +545,7 @@ trait {interfaceTypeName} {{
       }
 
       val nsString = namespace map {"Some(\"%s\")".format(_)} getOrElse {"None"}
-      
+
       "scalaxb.toXML(%s, %s, %s, defaultScope)".format(v, nsString, label) +
       (soapBindingStyle match {
         case DocumentStyle if !p.element.isDefined =>
@@ -568,7 +568,7 @@ trait {interfaceTypeName} {{
     }
   }
 
-  // body contains Seq[Node] collected by running 
+  // body contains Seq[Node] collected by running
   // Right(header, soapResponse.Body.any collect {
   //   case DataRecord(_, _, x: scala.xml.Node) => x
   // })
@@ -626,7 +626,24 @@ trait {interfaceTypeName} {{
     (part.typeValue, part.element) match {
       case (Some(typeValueQName), _) =>
         val typeSymbol = toTypeSymbol(typeValueQName)
-        xsdgenerator.buildArg(xsdgenerator.buildTypeName(typeSymbol), selector, Single, None)
+
+        // [error]   (attr: scalaxb.compiler.xsd.AttributeDecl,selector: String,stackItem: Option[String],wrapForLong: Boolean)String <and>
+        // [error]   (elem: scalaxb.compiler.xsd.ElemDecl,selector: String,stackItem: Option[String],wrapForLongAll: Boolean)String
+        // [error]  cannot be applied to (String, String, scalaxb.compiler.xsd.Single.type, None.type)
+
+        // def buildArg(selector: String, typeSymbol: XsTypeSymbol, stackItem: Option[String]): String = typeSymbol match {
+        // def buildArg(elem: ElemDecl, selector: String, stackItem: Option[String], wrapForLongAll: Boolean): String =
+        // def buildArg(attr: AttributeDecl, selector: String, stackItem: Option[String], wrapForLong: Boolean): String =
+        // def buildArg(content: SimpleContentDecl, typeSymbol: XsTypeSymbol): String = typeSymbol match {
+
+        // xsdgenerator.buildArg(xsdgenerator.typeSymbol, selector, Single, None)
+
+        // def buildArg(typeName: String, selector: String, cardinality: Cardinality, formatter: Option[String],
+        //              nillable: Boolean = false, defaultValue: Option[String] = None, fixedValue: Option[String] = None,
+        //              wrapForLongAll: Boolean = false, formatter: Option[String] = None): String = {
+
+        xsdgenerator.buildArg(xsdgenerator.buildTypeName(typeSymbol), selector, Single, None, None)
+
       case (_, Some(elementQName)) =>
         val elem = xsdgenerator.elements(splitTypeName(elementQName))
         xsdgenerator.buildArg(elem, selector, None, false)
@@ -640,7 +657,7 @@ trait {interfaceTypeName} {{
   case class ParamCache(paramName: String, typeSymbol: XsTypeSymbol, cardinality: Cardinality, nillable: Boolean, seqParam: Boolean) {
     def singleTypeName: String =
       if (nillable) "Option[" + baseTypeName + "]"
-      else baseTypeName      
+      else baseTypeName
     def typeName: String =
       cardinality match {
         case Single   => singleTypeName
