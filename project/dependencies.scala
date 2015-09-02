@@ -6,7 +6,10 @@ object Dependencies {
   val scala210 = "2.10.4"
 
   val scopt = "com.github.scopt" %% "scopt" % "3.2.0"
-  val log4j = "log4j" % "log4j" % "1.2.17"
+
+  val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.12"
+  val slf4jOverLog4j = "org.slf4j" % "log4j-over-slf4j" % "1.7.12"
+
   val defaultDispatchVersion = "0.11.2"
   val dispatch = "net.databinder.dispatch" %% "dispatch-core" % defaultDispatchVersion
   val launcherInterface = "org.scala-sbt" % "launcher-interface" % "0.12.0"
@@ -30,7 +33,8 @@ object Dependencies {
   def appDependencies(sv: String) = Seq(
     launcherInterface % "provided",
     scopt,
-    log4j
+    slf4jApi,
+    slf4jOverLog4j
   ) ++ (sv match {
     case x if sv startsWith "2.10." => Nil
     case _ => Seq(scalaXml, scalaParser)

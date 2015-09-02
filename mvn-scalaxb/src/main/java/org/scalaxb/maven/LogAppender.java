@@ -22,10 +22,10 @@ package org.scalaxb.maven;
  * THE SOFTWARE.
  */
 
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.spi.ThrowableInformation;
+import org.slf4j.AppenderSkeleton;
+import org.slf4j.Level;
+import org.slf4j.spi.LoggingEvent;
+import org.slf4j.spi.ThrowableInformation;
 import org.apache.maven.plugin.logging.Log;
 
 public class LogAppender extends AppenderSkeleton {
@@ -163,5 +163,5 @@ public class LogAppender extends AppenderSkeleton {
     public boolean requiresLayout() {
         return false;
     }
-    
+
 }
