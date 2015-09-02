@@ -55,7 +55,6 @@ object Plugin extends sbt.Plugin {
       def compile: Seq[File] =
         sources.headOption map { src =>
           import sc._
-          sc.Log.configureLogger(verbose)
           val module = Module.moduleByFileName(src)
           module.processFiles(sources.toVector, config.update(Outdir(outDir)))
         } getOrElse {Nil}

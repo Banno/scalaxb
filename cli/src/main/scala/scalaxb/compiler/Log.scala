@@ -21,8 +21,7 @@
  */
 package scalaxb.compiler
 
-import org.slf4j.{Logger, ConsoleAppender, EnhancedPatternLayout}
-import org.slf4j.spi.LoggingEvent
+import org.slf4j.{Logger, LoggerFactory}
 
 case class Log(logger: Logger) {
   def info(message: String, args: Any*) {
@@ -64,53 +63,8 @@ case class Log(logger: Logger) {
       case _: Throwable => logger.error(message)
     }
   }
-
-  def fatal(message: String, args: Any*) {
-    if (args.toSeq.isEmpty) logger.fatal(message)
-    else try {
-      logger.fatal(message format (args.toSeq: _*))
-    }
-    catch {
-      case _: Throwable => logger.fatal(message)
-    }
-  }
 }
 
 object Log {
   def forName(name: String) = Log(LoggerFactory.getLogger(name))
-
-  def configureLogger(verbose: Boolean) {
-    val root = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
-    val level = if (verbose) Level.TRACE else Level.WARN
-    root.setLevel(level)
-
-    val console = new ConsoleAppender(new Formatter)
-    val threshold = if (verbose) Level.TRACE else Level.INFO
-    console.setThreshold(threshold)
-    root.addAppender(console)
-  }
-
-  /**
-   * Formats log messages. Prepends a '!' to each line of an exception.
-   */
-  class Formatter extends EnhancedPatternLayout("%-5p [%d] %c: %m\n") {
-
-    override def ignoresThrowable = false
-
-    override def format(event: LoggingEvent) : String = {
-      val message = super.format(event)
-      val frames = event.getThrowableStrRep()
-      if (frames == null) {
-        message
-      } else {
-        val msg = new StringBuilder(message)
-        for (line <- frames) {
-          msg.append("! ").append(line).append("\n")
-        }
-        msg.toString
-      }
-    }
-
-  }
-
 }
